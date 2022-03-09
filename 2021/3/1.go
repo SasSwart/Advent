@@ -26,7 +26,6 @@ func main() {
 
 	for i := 0; i < len(bitFrequency); i++ {
 		gamma = gamma << 1
-		epsilon = epsilon << 1
 		gamma += (bitFrequency[i] << 1) / uint(len(input))
 	}
 
