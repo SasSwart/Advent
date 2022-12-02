@@ -1,11 +1,9 @@
 #lang racket
 
-(define input-file (open-input-file "test.txt"))
-
-(define elf-calories
+(define (calculate-elf-calories port)
   (let 
     loop (
-      [line (read-line input-file)]
+      [line (read-line port)]
       [nth-elf (list)]
     )
     (cond 
@@ -13,25 +11,29 @@
       [(eof-object? line) (list)]
       ; Handle snack lines
       [(non-empty-string? line)
-        (loop (read-line input-file)
+        (loop (read-line port)
               (cons (string->number line) nth-elf))] 
       ; Handle empty lines
       [else 
         (cons 
           nth-elf 
-          (loop (read-line input-file)
+          (loop (read-line port)
                 (list)))]
     )
   )
 )
 
-(define calorie-ranking
+(define (calorie-ranking elves)
   (sort 
-    elf-calories 
+    elves
     > 
     #:key (lambda (calories) (apply + calories)))
 )
 
-(displayln (apply + (flatten (take calorie-ranking 1))))
+(define input-file (open-input-file "test.txt"))
 
-(displayln (apply + (flatten (take calorie-ranking 3))))
+(define elf-calories (calculate-elf-calories input-file))
+
+(displayln (apply + (flatten (take (calorie-ranking elf-calories) 1))))
+
+(displayln (apply + (flatten (take (calorie-ranking elf-calories) 3))))
