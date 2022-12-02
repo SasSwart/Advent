@@ -1,6 +1,6 @@
 #lang racket
 
-(define (calculate-elf-calories port)
+(define (parse-elf-calories port)
   (let 
     loop (
       [line (read-line port)]
@@ -23,17 +23,21 @@
   )
 )
 
-(define (calorie-ranking elves)
+(define (top-n elves)
   (sort 
     elves
     > 
-    #:key (lambda (calories) (apply + calories)))
+    #:key (lambda (calories) (calories)))
 )
 
 (define input-file (open-input-file "test.txt"))
 
-(define elf-calories (calculate-elf-calories input-file))
+(define elf-calories (parse-elf-calories input-file))
 
-(displayln (apply + (flatten (take (calorie-ranking elf-calories) 1))))
+(define total-calories-per-elf (map (lambda (calories) (apply + (flatten calories))) elf-calories))
 
-(displayln (apply + (flatten (take (calorie-ranking elf-calories) 3))))
+(displayln total-calories-per-elf)
+
+(displayln (apply + (flatten (take (top-n elf-calories) 1))))
+
+(displayln (apply + (flatten (take (top-n elf-calories) 3))))
